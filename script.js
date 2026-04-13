@@ -1,46 +1,46 @@
+
 (function () {
   'use strict';
 
   const menuToggle = document.querySelector('.menu-toggle');
-  const siteNav = document.querySelector('.site-nav');
+  const nav = document.querySelector('.site-nav');
 
-  if (menuToggle && siteNav) {
+  if (menuToggle && nav) {
     menuToggle.addEventListener('click', function () {
-      const isOpen = siteNav.classList.toggle('is-open');
-      menuToggle.setAttribute('aria-expanded', String(isOpen));
-      menuToggle.textContent = isOpen ? 'Close' : 'Menu';
-    });
-
-    siteNav.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        siteNav.classList.remove('is-open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.textContent = 'Menu';
-      });
+      const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', String(!expanded));
+      nav.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
     });
   }
 
-  const revealItems = document.querySelectorAll('.reveal');
-
-  if ('IntersectionObserver' in window && revealItems.length) {
-    const observer = new IntersectionObserver(function (entries, currentObserver) {
+  const reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && reveals.length) {
+    const observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          currentObserver.unobserve(entry.target);
+          observer.unobserve(entry.target);
         }
       });
-    }, {
-      threshold: 0.16,
-      rootMargin: '0px 0px -40px 0px'
-    });
+    }, { threshold: 0.15 });
 
-    revealItems.forEach(function (item) {
+    reveals.forEach(function (item) {
       observer.observe(item);
     });
   } else {
-    revealItems.forEach(function (item) {
+    reveals.forEach(function (item) {
       item.classList.add('visible');
+    });
+  }
+
+  const form = document.querySelector('#waitlist-form');
+  const success = document.querySelector('.success-message');
+  if (form && success) {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      success.classList.add('show');
+      form.reset();
     });
   }
 })();

@@ -1,42 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scurry | App coming soon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+
+  <title>Join the waitlist | Scurry</title>
 </head>
 <body>
+  
   <header class="site-header solid-nav">
     <div class="container nav-row">
-      <a href="index.html" class="brand"><img src="images/logo.png" alt="Scurry logo"><span>Scurry</span></a>
+      <a href="index.html" class="brand" aria-label="Scurry Home">
+        <img src="images/logo.png" alt="Scurry logo">
+        <span>Scurry</span>
+      </a>
       <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
       <nav id="site-nav" class="site-nav">
         <a href="personal.html">Personal</a>
         <a href="business.html">Business</a>
         <a href="about.html">Company</a>
         <a href="team.html">Team</a>
-        <a href="coming-soon.html" class="nav-cta active-cta">Get the app</a>
+        <a href="coming-soon.html" class="nav-cta">Get the app</a>
       </nav>
     </div>
   </header>
 
-  <main>
-    <section class="page-hero section-dark compact-hero fill-screen">
-      <div class="container center-stack reveal">
-        <p class="eyebrow accent">Coming soon</p>
-        <h1>The Scurry app is on the way.</h1>
-        <p class="section-intro">Soon this page will serve as a place for app downloads, waitlist capture, release notes, and launch announcements. For now, those experiences are in development.</p>
-        <div class="hero-actions center-actions">
-          <a href="index.html" class="btn btn-primary">Back to home</a>
-          <a href="team.html" class="btn btn-secondary">Meet the team</a>
-        </div>
-      </div>
-    </section>
+  <main class="section section-light waitlist-shell">
+    <div class="container waitlist-card reveal visible">
+      <p class="eyebrow">Coming soon</p>
+      <h1 style="font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.06em;line-height:.96;">Join the Scurry waitlist.</h1>
+      <p class="section-intro" style="margin:0;max-width:100%;text-align:left;">Scurry is still in development, but the waitlist is active so visitors can request updates and early access information.</p>
+      <form id="waitlist-form">
+        <input type="text" name="name" placeholder="Full name" required>
+        <input type="email" name="email" placeholder="Email address" required>
+        <textarea name="interest" rows="4" placeholder="What are you most interested in?"></textarea>
+        <button class="btn btn-primary" type="submit">Join the waitlist</button>
+      </form>
+      <div class="success-message">Thanks — you’ve been added to the Scurry waitlist.</div>
+      <p class="waitlist-note">This demo form is front-end only for now and can be wired to a real signup flow later.</p>
+    </div>
   </main>
+  
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="index.html" class="brand footer-brand"><img src="images/logo.png" alt="Scurry logo"><span>Scurry</span></a>
+        <p>The Modern Global AI Stablecoin Banking Ecosystem.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="index.html">Home</a>
+        <a href="personal.html">Personal</a>
+        <a href="business.html">Business</a>
+        <a href="team.html">Team</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About Scurry</a>
+        <a href="coming-soon.html">Join the waitlist</a>
+      </div>
+    </div>
+    <div class="container disclosure-row">
+      <div class="disclosure-lite">Scurry is a financial technology company, not a bank. Virtual accounts, payment cards, custody, and on/off ramp services are provided by licensed partners. Availability of services may vary by jurisdiction and is subject to regulatory approval. We provide banking-like services through stablecoins.</div>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
