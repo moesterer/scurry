@@ -119,4 +119,48 @@
   
     window.addEventListener('load', startMockupCycle);
   }
+
+    const faqSearch = document.querySelector('#faq-search');
+    const faqGroups = Array.from(document.querySelectorAll('[data-faq-group]'));
+    const noResults = document.querySelector('.faq-no-results');
+  
+    if (!faqSearch || !faqGroups.length) {
+      return;
+    }
+  
+    faqSearch.addEventListener('input', function () {
+      const query = faqSearch.value.trim().toLowerCase();
+      let totalMatches = 0;
+    
+      faqGroups.forEach(function (group) {
+        const items = Array.from(group.querySelectorAll('.faq-item'));
+        let groupMatches = 0;
+      
+        items.forEach(function (item) {
+          const text = item.textContent.toLowerCase();
+          const matches = !query || text.includes(query);
+        
+          item.classList.toggle('is-hidden', !matches);
+        
+          if (query && matches) {
+            item.setAttribute('open', '');
+          }
+        
+          if (!query) {
+            item.removeAttribute('open');
+          }
+        
+          if (matches) {
+            groupMatches += 1;
+            totalMatches += 1;
+          }
+        });
+      
+        group.classList.toggle('is-hidden', groupMatches === 0);
+      });
+    
+      if (noResults) {
+        noResults.hidden = totalMatches !== 0;
+      }
+    });
 })();
