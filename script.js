@@ -123,14 +123,85 @@
     const faqSearch = document.querySelector('#faq-search');
     const faqGroups = Array.from(document.querySelectorAll('[data-faq-group]'));
     const noResults = document.querySelector('.faq-no-results');
+    const faqShell = document.querySelector('.faq-shell');
   
     if (!faqSearch || !faqGroups.length) {
       return;
     }
-  
-    faqSearch.addEventListener('input', function () {
+
+    function escapeRegExp(value) {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function clearFaqHighlights() {
+      document.querySelectorAll('mark.faq-highlight').forEach(function (highlight) {
+        const parent = highlight.parentNode;
+
+        if (!parent) {
+          return;
+        }
+
+        parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+        parent.normalize();
+      });
+    }
+
+    function highlightFaqText(item, query) {
+      const terms = query.split(/\s+/).filter(Boolean).map(escapeRegExp);
+
+      if (!terms.length) {
+        return;
+      }
+
+      const pattern = new RegExp('(' + terms.join('|') + ')', 'gi');
+      const walker = document.createTreeWalker(item, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          if (!node.nodeValue.trim() || !pattern.test(node.nodeValue)) {
+            pattern.lastIndex = 0;
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          pattern.lastIndex = 0;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const textNodes = [];
+
+      while (walker.nextNode()) {
+        textNodes.push(walker.currentNode);
+      }
+
+      textNodes.forEach(function (node) {
+        const fragment = document.createDocumentFragment();
+        const parts = node.nodeValue.split(pattern);
+
+        parts.forEach(function (part) {
+          if (!part) {
+            return;
+          }
+
+          if (pattern.test(part)) {
+            const mark = document.createElement('mark');
+            mark.className = 'faq-highlight';
+            mark.textContent = part;
+            fragment.appendChild(mark);
+            pattern.lastIndex = 0;
+            return;
+          }
+
+          pattern.lastIndex = 0;
+          fragment.appendChild(document.createTextNode(part));
+        });
+
+        node.parentNode.replaceChild(fragment, node);
+      });
+    }
+
+    function filterFaqItems() {
       const query = faqSearch.value.trim().toLowerCase();
       let totalMatches = 0;
+
+      clearFaqHighlights();
     
       faqGroups.forEach(function (group) {
         const items = Array.from(group.querySelectorAll('.faq-item'));
@@ -144,6 +215,7 @@
         
           if (query && matches) {
             item.setAttribute('open', '');
+            highlightFaqText(item, query);
           }
         
           if (!query) {
@@ -161,6 +233,28 @@
     
       if (noResults) {
         noResults.hidden = totalMatches !== 0;
+      }
+
+      return totalMatches;
+    }
+  
+    faqSearch.addEventListener('input', filterFaqItems);
+
+    faqSearch.addEventListener('keydown', function (event) {
+      const query = faqSearch.value.trim();
+
+      if (event.key !== 'Enter' || !query || !faqShell) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const totalMatches = filterFaqItems();
+      const firstMatch = faqShell.querySelector('.faq-item:not(.is-hidden)');
+      const scrollTarget = totalMatches ? firstMatch : noResults;
+
+      if (scrollTarget) {
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
 })();

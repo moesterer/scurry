@@ -1507,6 +1507,7 @@ h4 {
 }
 
 .faq-item {
+  scroll-margin-top: 180px;
   margin-bottom: 10px;
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -1517,11 +1518,9 @@ h4 {
 
 .faq-item summary {
   min-height: 64px;
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 16px;
-  padding: 18px 22px;
+  display: block;
+  position: relative;
+  padding: 18px 58px 18px 22px;
   cursor: pointer;
   color: var(--text);
   font-weight: 800;
@@ -1534,18 +1533,24 @@ h4 {
 
 .faq-item summary::after {
   content: '⌄';
+  position: absolute;
+  top: 50%;
+  right: 22px;
   color: #8292a6;
   font-size: 1.3rem;
   line-height: 1;
   transition: transform 0.24s ease;
+  transform: translateY(-50%);
 }
 
 .faq-item[open] summary::after {
-  transform: rotate(180deg);
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .faq-status {
-  justify-self: end;
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
   padding: 7px 12px;
   border-radius: 999px;
   background: rgba(25, 173, 252, 0.10);
@@ -1581,7 +1586,15 @@ h4 {
   margin-bottom: 10px;
 }
 
+.faq-highlight {
+  background: #fff176;
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
 .faq-no-results {
+  scroll-margin-top: 180px;
   padding: 30px;
   border-radius: var(--radius-sm);
   background: var(--surface-soft);
